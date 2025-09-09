@@ -39,7 +39,7 @@ const loadCategory=()=>{
     };
 
     const loadNewsByCategory=(categoryId)=>{
-        console.log(categoryId)
+        // console.log(categoryId)
        fetch (`https://openapi.programming-hero.com/api/category/${categoryId}`)
        .then(res=>res.json())
        .then(data=>{
@@ -51,7 +51,7 @@ const loadCategory=()=>{
        })
 
 const showNewsByCategory=(plants)=>{
-console.log(plants)
+// console.log(plants)
 newsContainer.innerHTML=""
 plants.forEach(plant=>{
     newsContainer.innerHTML+=`
@@ -64,10 +64,68 @@ plants.forEach(plant=>{
             <h1> ${plant.category}</h1>
             <h1> ${plant.price}</h1>
        </div>
-        <button class="my-3 text-white w-full text-lg bg-[#166534] rounded-2xl">Add to Cart</button>
+       
+       <button class="add-to-cart my-3 text-white w-full text-lg bg-[#166534] rounded-2xl" data-price="${plant.price}">Add to Cart</button>
+
     </div>`
 })
+
+
 }
+//--------------------
+// ---------------- Cart Functionality ----------------
+let cartItems = [];
+let totalPrice = 0;
+
+// Function to render cart
+function renderCart() {
+    const cartContainer = document.getElementById('cart');
+    cartContainer.innerHTML = '';
+
+    cartItems.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.classList.add('flex', 'justify-between', 'items-center', 'my-2', 'border-b', 'pb-1');
+        div.innerHTML = `
+            <span>${item.name}</span>
+            <span>${item.price} <button data-index="${index}" class="remove text-red-500 ml-2">❌</button></span>
+        `;
+        cartContainer.appendChild(div);
+    });
+
+    const totalDiv = document.createElement('div');
+    totalDiv.classList.add('font-bold', 'mt-2');
+    totalDiv.innerText = `Total: ${totalPrice.toFixed(2)}`;
+    cartContainer.appendChild(totalDiv);
+}
+
+// Add to Cart button click
+newsContainer.addEventListener('click', (e) => {
+    if (e.target.classList.contains('add-to-cart')) {
+        const card = e.target.closest('div'); // nearest card div
+        const name = card.querySelector('h1').innerText; // first h1 assumed to be name
+        const price = parseFloat(card.querySelectorAll('h1')[2].innerText) || 0; // 3rd h1 is price
+
+        cartItems.push({ name, price });
+        totalPrice += price;
+
+        renderCart();
+    }
+});
+
+// Remove from Cart button click
+cart.addEventListener('click', (e) => {
+    if (e.target.classList.contains('remove')) {
+        const index = e.target.dataset.index;
+        totalPrice -= cartItems[index].price;
+        cartItems.splice(index, 1);
+        renderCart();
+    }
+});
+
+
+
+//--------------------
+
     }
     loadCategory() 
     loadNewsByCategory(1)   
