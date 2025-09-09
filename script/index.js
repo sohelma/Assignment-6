@@ -1,5 +1,6 @@
 const categoryContainer= document.getElementById('categoryContainer')
 const newsContainer=document.getElementById('newsContainer')
+const cart=document.getElementById('cart')
 
 const loadCategory=()=>{
     fetch("https://openapi.programming-hero.com/api/categories")
