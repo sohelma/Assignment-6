@@ -1,0 +1,9 @@
+*{
+    font-family: "Inter", sans-serif;
+}
+
+/* for index.js */
+.active {
+    background-color: #15803D;
+    color: white;
+}
